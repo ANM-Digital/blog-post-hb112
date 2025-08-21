@@ -1,57 +1,84 @@
 "use strict";
 // lib/firebase/firestore.ts
 
-import { 
-  getFirestore as firebaseGetFirestore, 
-  doc, 
-  setDoc, 
-  updateDoc, 
-  addDoc, 
-  collection 
+import {
+  getFirestore as firebaseGetFirestore,
+  doc,
+  setDoc,
+  updateDoc,
+  addDoc,
+  collection,
+  query,
+  orderBy,
+  getDocs,
+  Timestamp,
 } from 'firebase/firestore';
-import app from './firebase-config'; // Import the app from firebase-config
+import app from './firebase-config';
 
-// Export Firestore core utilities
-export const getFirestore = firebaseGetFirestore;
-export { collection, addDoc } from 'firebase/firestore';
+const db = firebaseGetFirestore(app);
 
-const db = getFirestore(app); // Initialize Firestore with the Firebase app
-
-/** Save data to Firestore (sets a specific document) */
-export const saveDataToFirestore = async (collectionName: string, documentId: string, data: any) => {
+// Save a document with a known ID
+export const saveDataToFirestore = async (
+  collectionName: string,
+  documentId: string,
+  data: any
+) => {
   try {
     await setDoc(doc(db, collectionName, documentId), data);
-    console.log(`Data saved successfully to collection ${collectionName} with document ID ${documentId}`);
+    console.log(`✅ Saved to ${collectionName}/${documentId}`);
   } catch (error) {
-    console.error('Error saving data:', error instanceof Error ? error.message : error);
+    console.error('❌ Error saving data:', error);
     throw error;
   }
 };
 
-/** Update existing document in Firestore */
-export const updateDataInFirestore = async (collectionName: string, documentId: string, data: any) => {
+// Update a document
+export const updateDataInFirestore = async (
+  collectionName: string,
+  documentId: string,
+  data: any
+) => {
   try {
-    const docRef = doc(db, collectionName, documentId);
-    await updateDoc(docRef, data);
-    console.log(`Data updated successfully in collection ${collectionName} with document ID ${documentId}`);
+    await updateDoc(doc(db, collectionName, documentId), data);
+    console.log(`✅ Updated ${collectionName}/${documentId}`);
   } catch (error) {
-    console.error('Error updating data:', error instanceof Error ? error.message : error);
+    console.error('❌ Error updating data:', error);
     throw error;
   }
 };
 
-/** Add new document to Firestore (auto-generated ID) */
-export const addDataToFirestore = async (collectionName: string, data: any) => {
+// Add a document with auto-generated ID
+export const addDataToFirestore = async (
+  collectionName: string,
+  data: any
+) => {
   try {
     const collectionRef = collection(db, collectionName);
-    const docRef = await addDoc(collectionRef, data);
-    console.log(`Data added successfully with ID: ${docRef.id}`);
-    return docRef; // Return the reference in case caller needs the ID
+    const docRef = await addDoc(collectionRef, {
+      ...data,
+      createdAt: Timestamp.now(),
+    });
+    console.log(`✅ Added doc ID: ${docRef.id}`);
+    return docRef;
   } catch (error) {
-    console.error('Error adding data:', error instanceof Error ? error.message : error);
+    console.error('❌ Error adding data:', error);
     throw error;
   }
 };
 
-// ✅ Export the db instance so it can be imported elsewhere
+// Retrieve and rejoin original text by partNumber
+export const getOriginalTextFromChunks = async (
+  collectionName: string
+): Promise<string> => {
+  try {
+    const q = query(collection(db, collectionName), orderBy("partNumber", "asc"));
+    const snapshot = await getDocs(q);
+    const parts = snapshot.docs.map(doc => doc.data().content || "");
+    return parts.join("");
+  } catch (error) {
+    console.error("❌ Error reconstructing original text:", error);
+    throw error;
+  }
+};
+
 export { db };

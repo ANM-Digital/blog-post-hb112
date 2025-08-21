@@ -1,4 +1,3 @@
-// tailwind.config.js
 const plugin = require('tailwindcss/plugin');
 const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors');
@@ -27,8 +26,15 @@ module.exports = {
         foreground: 'var(--foreground)',
       },
       fontFamily: {
-        sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
-        mono: ['var(--font-mono)', ...defaultTheme.fontFamily.mono],
+        sans: [
+          'var(--font-work-sans)',      // your Work Sans font variable
+          'var(--font-geist-sans)',     // geistSans variable
+          ...defaultTheme.fontFamily.sans,
+        ],
+        mono: [
+          'var(--font-geist-mono)',     // geistMono variable
+          ...defaultTheme.fontFamily.mono,
+        ],
       },
       borderColor: {
         DEFAULT: 'currentColor',
@@ -47,6 +53,6 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
-    require('tailwindcss-animate'), // You already installed this!
+    require('tailwindcss-animate'),
   ],
 };

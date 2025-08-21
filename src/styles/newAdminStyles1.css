@@ -1,0 +1,11 @@
+/* newAdminStyles1.css */
+
+body {
+  background-color: #fff;
+  font-family: sans-serif;
+}
+
+/* Hide sidebar when this class is applied */
+.hide-sidebar {
+  display: none !important;
+}

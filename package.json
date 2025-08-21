@@ -13,9 +13,10 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
     "blog-summarizer": "file:",
-    "firebase": "^11.6.0",
+    "firebase": "^11.9.1",
     "firebase-admin": "^13.2.0",
     "next": "^15.3.1",
+    "next-intl": "^4.1.0",
     "nodemailer": "^6.10.1",
     "openai": "^4.95.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
@@ -23,7 +24,8 @@
     "react-dom": "^19.1.0",
     "stripe": "^18.0.0",
     "tailwind-merge": "^3.0.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
